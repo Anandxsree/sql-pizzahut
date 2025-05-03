@@ -1,0 +1,6 @@
+# Pizza Hut SQL Project
+
+This project includes SQL stored procedures and queries to analyze customer order data.
+
+## Features
+- Stored procedure `broto()` that counts orders per customer.
