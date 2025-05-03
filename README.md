@@ -1,5 +1,14 @@
 PizzaHut Database Analysis
-Welcome to the PizzaHut Database Analysis project! This repository contains SQL scripts to set up a database for PizzaHut and perform a variety of data analyses on orders, sales, and pizza preferences. The aim is to gain insights into total orders, revenue, popular pizza types, and more, using SQL.
+This project demonstrates SQL skills for database creation and analysis using a fictional PizzaHut dataset. It includes scripts to:
+
+Create a MySQL database and tables for orders and order details.
+
+Analyze sales data to extract insights like total revenue, most ordered pizzas, and revenue distribution.
+
+Implement a stored procedure for filtering pizzas by price range.
+
+The repository is designed for developers, data analysts, or students learning SQL and database management.
+
 
 Table of Contents
 Project Overview
@@ -12,6 +21,22 @@ Database Schema
 
 SQL Queries
 
+1. Total Number of Orders
+
+2. Total Revenue from Pizza Sales
+
+3. Highest-Priced Pizza
+
+4. Most Common Pizza Size Ordered
+
+5. Top 5 Most Ordered Pizza Types
+
+6. Stored Procedure: Pizzas Priced Between $10 and $20
+
+7. Top 3 Pizza Types by Revenue
+
+8. Percentage Contribution of Each Pizza Type to Total Revenue
+
 Usage
 
 Contributing
@@ -20,59 +45,53 @@ License
 
 Contact
 
+
 Project Overview
-This project showcases SQL skills for database creation and analysis using a fictional PizzaHut dataset. The primary goal is to perform insights-driven analysis on order and sales data. It includes:
+This project includes SQL scripts to set up a database for PizzaHut and perform various analyses on the dataset. The goal is to extract valuable business insights such as:
 
-Database Setup: SQL scripts to create the database and necessary tables.
+Total number of orders
 
-Data Analysis: Queries to extract valuable information, such as total revenue, most ordered pizza types, and revenue distribution.
+Revenue analysis
 
-Stored Procedure: A stored procedure to filter pizzas by price range.
+Most popular pizzas
 
-The repository is useful for developers, data analysts, or students looking to practice SQL and database management.
+Pizza pricing information
+
+
 
 Prerequisites
-To run the SQL scripts, you'll need the following:
+Before you can run the SQL scripts, ensure that you have the following:
 
-MySQL (version 5.7 or later) or a compatible database system (e.g., MariaDB).
+MySQL (version 5.7 or later) or a compatible database system Mysql.
 
-MySQL Client (e.g., MySQL Workbench, phpMyAdmin, or command-line interface).
+A MySQL client such as MySQL Workbench, phpMyAdmin, or the command-line interface.
 
 Basic knowledge of SQL and database concepts.
 
-Installation
-Install MySQL
+
+nstallation
+Install MySQL:
+
 Download and install MySQL from mysql.com.
 
-Alternatively, you can use a cloud-based MySQL service or Docker by running:
+Alternatively, you can use a cloud-based MySQL service or Docker:
 
-bash
-Copy
-Edit
 docker run -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root -d mysql:latest
-Clone the Repository
-Clone the repository to your local machine:
 
-bash
-Copy
-Edit
-git clone https://github.com/your-username/pizzahut-database-analysis.git
+
+Clone the Repository:
+git clone https://github.com//Anandxsree/sql-pizzahut.git
 cd pizzahut-database-analysis
-Set Up the Database
-Log in to your MySQL server:
 
-bash
-Copy
-Edit
+
+Log in to your MySQL server:
 mysql -u root -p
-Run the SQL scripts from the Database Schema section to create the database and tables.
+
 
 Database Schema
-The database consists of four tables: orders, order_details, pizzas, and pizza_types. Below is the SQL to set up the database and tables.
+The database consists of four main tables: orders, order_details, pizzas, and pizza_types. Here's the SQL script to create the database and the tables:
 
-sql
-Copy
-Edit
+
 -- Create Database
 CREATE DATABASE pizzahut;
 USE pizzahut;
@@ -93,7 +112,7 @@ CREATE TABLE order_details (
   FOREIGN KEY (order_id) REFERENCES orders(order_id)
 );
 
--- Pizzas Table (Assumed Schema)
+-- Pizzas Table
 CREATE TABLE pizzas (
   pizza_id VARCHAR(25) PRIMARY KEY,
   pizza_type_id VARCHAR(25) NOT NULL,
@@ -101,67 +120,71 @@ CREATE TABLE pizzas (
   price DECIMAL(5,2) NOT NULL
 );
 
--- Pizza Types Table (Assumed Schema)
+-- Pizza Types Table
 CREATE TABLE pizza_types (
   pizza_type_id VARCHAR(25) PRIMARY KEY,
   name VARCHAR(100) NOT NULL,
   category VARCHAR(50) NOT NULL
 );
+
+
+
+
 SQL Queries
-Below are SQL queries for analyzing the PizzaHut dataset:
 
-Total Number of Orders:
+Below are the SQL queries for analyzing the PizzaHut dataset, along with their purposes.
 
-sql
-Copy
-Edit
+1. Total Number of Orders
+
+Retrieve the total number of orders placed.
+
 SELECT COUNT(order_id) AS total_orders FROM orders;
-Total Revenue from Pizza Sales:
 
-sql
-Copy
-Edit
-SELECT ROUND(SUM(order_details.quantity * pizzas.price), 2) AS total_revenue
-FROM order_details
+2. Total Revenue from Pizza Sales
+
+Calculate the total revenue generated from pizza sales.
+
+SELECT ROUND(SUM(order_details.quantity * pizzas.price), 2) AS TOTAL_REVENUE 
+FROM order_details 
 JOIN pizzas ON pizzas.pizza_id = order_details.pizza_id;
-Highest-Priced Pizza:
 
-sql
-Copy
-Edit
-SELECT pizza_types.name, pizzas.price
-FROM pizza_types
+3. Highest-Priced Pizza
+
+Identify the pizza with the highest price.
+
+SELECT pizza_types.name, pizzas.price 
+FROM pizza_types 
 JOIN pizzas ON pizza_types.pizza_type_id = pizzas.pizza_type_id
-ORDER BY pizzas.price DESC
+ORDER BY pizzas.price DESC 
 LIMIT 1;
-Most Common Pizza Size Ordered:
 
-sql
-Copy
-Edit
-SELECT pizzas.size, COUNT(order_details.order_details_id)
+4. Most Common Pizza Size Ordered
+
+Identify the most frequently ordered pizza size.
+
+SELECT pizzas.size, COUNT(order_details.order_details_id) 
 FROM pizzas
 JOIN order_details ON pizzas.pizza_id = order_details.pizza_id
 GROUP BY pizzas.size
-ORDER BY COUNT(order_details.quantity) DESC
+ORDER BY COUNT(order_details.quantity) DESC 
 LIMIT 1;
-Top 5 Most Ordered Pizza Types:
 
-sql
-Copy
-Edit
-SELECT pizza_types.name, SUM(order_details.quantity) AS quantity
-FROM pizza_types
+5. Top 5 Most Ordered Pizza Types
+
+List the top 5 pizza types by order quantity.
+
+SELECT pizza_types.name, SUM(order_details.quantity) AS quantity 
+FROM pizza_types 
 JOIN pizzas ON pizza_types.pizza_type_id = pizzas.pizza_type_id
 JOIN order_details ON order_details.pizza_id = pizzas.pizza_id
 GROUP BY pizza_types.name
-ORDER BY quantity DESC
+ORDER BY quantity DESC 
 LIMIT 5;
-Stored Procedure: Pizzas Priced Between $10 and $20:
 
-sql
-Copy
-Edit
+6. Stored Procedure: Pizzas Priced Between $10 and $20
+
+Create and call a stored procedure to retrieve pizzas with prices between $10 and $20.
+
 DELIMITER $$
 
 CREATE PROCEDURE yt()
@@ -173,66 +196,131 @@ END$$
 DELIMITER ;
 
 CALL yt();
-Top 3 Pizza Types by Revenue:
 
-sql
-Copy
-Edit
-SELECT pizza_types.name,
+7. Top 3 Pizza Types by Revenue
+
+Determine the top 3 pizza types based on revenue.
+
+SELECT pizza_types.name, 
        SUM(order_details.quantity * pizzas.price) AS revenue
-FROM pizza_types
+FROM pizza_types 
 JOIN pizzas ON pizzas.pizza_type_id = pizza_types.pizza_type_id
 JOIN order_details ON order_details.pizza_id = pizzas.pizza_id
-GROUP BY pizza_types.name
-ORDER BY revenue DESC
+GROUP BY pizza_types.name 
+ORDER BY revenue DESC 
 LIMIT 3;
-Percentage Contribution of Each Pizza Type to Total Revenue:
 
-sql
-Copy
-Edit
-SELECT pizza_types.category,
-       ROUND(SUM(order_details.quantity * pizzas.price) * 100.0 /
-             (SELECT SUM(order_details.quantity * pizzas.price)
-              FROM order_details 
-              JOIN pizzas ON pizzas.pizza_id = order_details.pizza_id), 2) AS revenue_percentage
+8. Percentage Contribution of Each Pizza Type to Total Revenue
+
+Calculate the percentage contribution of each pizza category to total revenue.
+
+SELECT 
+  pizza_types.category, 
+  ROUND(SUM(order_details.quantity * pizzas.price) * 100.0 / 
+        (SELECT SUM(order_details.quantity * pizzas.price)
+         FROM order_details 
+         JOIN pizzas ON pizzas.pizza_id = order_details.pizza_id), 2) AS revenue_percentage
 FROM pizza_types
 JOIN pizzas ON pizzas.pizza_type_id = pizza_types.pizza_type_id
 JOIN order_details ON order_details.pizza_id = pizzas.pizza_id
 GROUP BY pizza_types.category
 ORDER BY revenue_percentage DESC
 LIMIT 3;
+
 Usage
-Set Up the Database
+
+
+
+
+
+Set Up the Database:
+
+
+
+
+
 Execute the SQL in the Database Schema section to create the pizzahut database and tables.
 
-Populate the tables with sample data (using CSV import or manual INSERT statements).
 
-Run Queries
-Execute the SQL queries in the SQL Queries section to analyze the data. You can run these in your MySQL client:
 
-bash
-Copy
-Edit
+Populate the tables with sample data (e.g., via CSV import or manual INSERT statements).
+
+
+
+Run Queries:
+
+
+
+
+
+Use a MySQL client to execute the queries in the SQL Queries section.
+
+
+
+Example using MySQL command line:
+
 mysql -u root -p pizzahut < queries.sql
-Replace queries.sql with the filename containing your desired queries.
 
-Analyze Results
-Review the outputs of the queries to gain insights into sales performance, pizza popularity, and revenue distribution.
+
+
+Replace queries.sql with a file containing the desired queries.
+
+
+
+Analyze Results:
+
+
+
+
+
+Review query outputs to gain insights into sales performance, popular items, and revenue distribution.
+
+
+
+Optionally, visualize results using tools like Python (e.g., Matplotlib) or BI tools (e.g., Tableau).
+
+
+
+Extend the Project:
+
+
+
+
+
+Add more queries to analyze other aspects (e.g., orders by time of day, customer demographics).
+
+
+
+Integrate with a front-end application to display results dynamically.
 
 Contributing
+
 Contributions are welcome! To contribute:
+
+
+
+
 
 Fork the repository.
 
-Create a new branch: git checkout -b feature/your-feature.
+
+
+Create a new branch (git checkout -b feature/your-feature).
+
+
 
 Make your changes (e.g., add new queries, improve documentation).
 
-Commit your changes: git commit -m "Add your feature".
 
-Push to your branch: git push origin feature/your-feature.
+
+Commit your changes (git commit -m "Add your feature").
+
+
+
+Push to the branch (git push origin feature/your-feature).
+
+
 
 Open a pull request.
 
-Please ensure your code follows the existing style and includes clear comments.
+Please ensure your code follows the existing style and includes clear comments
